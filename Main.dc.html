@@ -1,0 +1,981 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Life Mama.lab — Strategic Technology Studio</title>
+<script src="./vendor/react.js"></script>
+<script src="./vendor/react-dom.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500&amp;family=Instrument+Serif:ital@0;1&amp;family=Manrope:wght@400;500;600;700&amp;display=swap">
+<style>
+body { margin: 0; background: #FAF9F6; }
+a { color: #252926; }
+a:hover { color: var(--sage, #2A4530); }
+
+.lm {
+  --porcelain: #FAF9F6; --white: #FFFFFF; --graphite: #252926; --mist: #DEE4DF;
+  --sage-deep: var(--sage); --muted: #5B625D; --faint: #6A716C;
+  --ease: cubic-bezier(.22, .8, .24, 1);
+  --serif: 'Instrument Serif', 'Iowan Old Style', Georgia, serif;
+  --mono: 'Geist Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+  position: relative;
+}
+.lm *, .lm *::before, .lm *::after { box-sizing: border-box; }
+.lm ::selection { background: rgba(42, 69, 48, .16); }
+.lm a:focus-visible, .lm button:focus-visible { outline: 2px solid var(--sage, #2A4530); outline-offset: 4px; border-radius: 12px; }
+.lm section { scroll-margin-top: 76px; }
+
+.wrap { width: 100%; max-width: 1240px; margin: 0 auto; padding-left: clamp(20px, 4vw, 48px); padding-right: clamp(20px, 4vw, 48px); }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; margin: -1px; padding: 0; border: 0; }
+.skip { position: absolute; left: 16px; top: -80px; z-index: 50; background: #252926; color: #FFFFFF; padding: 12px 18px; border-radius: 999px; font-size: 14px; text-decoration: none; }
+.skip:focus { top: 12px; color: #FFFFFF; }
+
+.serif { font-family: var(--serif); font-style: italic; font-weight: 400; letter-spacing: -0.012em; }
+.eyebrow { font-family: var(--mono); font-size: 12px; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); display: flex; align-items: center; gap: 14px; margin: 0; }
+.eyebrow::before { content: ''; width: 28px; height: 1px; background: var(--sage); flex: none; }
+.h2 { font-size: clamp(34px, 4.4vw, 60px); line-height: 1.06; letter-spacing: -0.038em; font-weight: 500; margin: 0; color: #252926; text-wrap: balance; }
+.h2 .serif, h1 .serif { font-size: 1.1em; line-height: .9; letter-spacing: -0.015em; }
+.lead { font-size: clamp(19px, 1.7vw, 23px); line-height: 1.5; letter-spacing: -0.012em; color: #252926; margin: 0; text-wrap: pretty; }
+.body { font-size: 17px; line-height: 1.7; color: var(--muted); margin: 0; text-wrap: pretty; }
+
+/* Header */
+.lm-header { position: sticky; top: 0; z-index: 30; background: rgba(250, 249, 246, .84); -webkit-backdrop-filter: saturate(1.3) blur(14px); backdrop-filter: saturate(1.3) blur(14px); border-bottom: 1px solid transparent; }
+.wordmark { display: inline-flex; align-items: baseline; gap: 1px; text-decoration: none; color: #252926; font-size: 19px; font-weight: 600; letter-spacing: -0.03em; min-height: 44px; align-items: center; }
+.wordmark .serif { font-size: 23px; letter-spacing: -0.01em; color: #4E6355; }
+.nav { display: flex; align-items: center; gap: clamp(12px, 2.4vw, 32px); }
+.nav-link { position: relative; font-size: 14px; font-weight: 500; color: var(--muted); text-decoration: none; padding: 12px 2px; }
+.nav-link::after { content: ''; position: absolute; left: 2px; right: 2px; bottom: 8px; height: 1px; background: var(--sage-deep); transform: scaleX(0); transform-origin: left; transition: transform .5s var(--ease); }
+.nav-link:hover { color: #252926; }
+.nav-link:hover::after { transform: scaleX(1); }
+.pill-link { display: inline-flex; align-items: center; min-height: 44px; padding: 0 20px; border: 1px solid var(--sage); border-radius: 999px; font-size: 14px; font-weight: 600; color: #FFFFFF; text-decoration: none; background: var(--sage); transition: border-color .4s var(--ease), background-color .4s var(--ease); }
+.pill-link:hover { color: #FFFFFF; background: color-mix(in oklab, var(--sage) 86%, #FFFFFF); }
+@media (max-width: 720px) {
+  .nav .nav-link { display: none; }
+}
+
+/* Buttons */
+.btn { display: inline-flex; align-items: center; gap: 12px; min-height: 54px; padding: 0 26px; border-radius: 999px; background: var(--sage); color: #FFFFFF; font-size: 15px; font-weight: 600; letter-spacing: -0.005em; text-decoration: none; transform: translate(var(--mx, 0px), var(--my, 0px)); transition: transform .7s var(--ease), background-color .4s var(--ease), box-shadow .5s var(--ease); box-shadow: 0 1px 0 rgba(255, 255, 255, .08) inset, 0 14px 30px -18px rgba(42, 69, 48, .6); }
+.btn:hover { color: #FFFFFF; background: color-mix(in oklab, var(--sage) 86%, #FFFFFF); }
+.btn svg, .link-arrow svg { transition: transform .5s var(--ease); }
+.btn:hover svg { transform: translateX(3px); }
+.magnet { display: inline-flex; padding: 14px; margin: -14px; }
+.link-arrow { display: inline-flex; align-items: center; gap: 10px; min-height: 54px; padding: 0 6px; font-size: 15px; font-weight: 600; color: #252926; text-decoration: none; position: relative; }
+.link-arrow::after { content: ''; position: absolute; left: 6px; right: 6px; bottom: 12px; height: 1px; background: var(--mist); }
+.link-arrow::before { content: ''; position: absolute; left: 6px; right: 6px; bottom: 12px; height: 1px; background: var(--sage-deep); transform: scaleX(0); transform-origin: left; transition: transform .6s var(--ease); z-index: 1; }
+.link-arrow:hover { color: #252926; }
+.link-arrow:hover::before { transform: scaleX(1); }
+.link-arrow:hover svg { transform: translateY(2px); }
+
+/* Responsive line field */
+.hero { position: relative; overflow: hidden; --px: 36; --py: 50; --fw: 14.4; --fh: 8.6; }
+.cta { --px: 50; --py: 50; --fw: 11.4; --fh: 5.6; }
+.field { position: absolute; inset: 0; pointer-events: none; }
+.hero .field { -webkit-mask-image: linear-gradient(90deg, rgba(0, 0, 0, .16) 0%, rgba(0, 0, 0, .3) 40%, #000 74%); mask-image: linear-gradient(90deg, rgba(0, 0, 0, .16) 0%, rgba(0, 0, 0, .3) 40%, #000 74%); }
+.cta .field { -webkit-mask-image: radial-gradient(ellipse 62% 74% at 50% 50%, rgba(0, 0, 0, .06) 40%, #000 100%); mask-image: radial-gradient(ellipse 62% 74% at 50% 50%, rgba(0, 0, 0, .06) 40%, #000 100%); }
+@media (max-width: 760px) {
+  .hero .field { -webkit-mask-image: linear-gradient(180deg, rgba(0, 0, 0, .1) 0%, rgba(0, 0, 0, .25) 55%, rgba(0, 0, 0, .9) 100%); mask-image: linear-gradient(180deg, rgba(0, 0, 0, .1) 0%, rgba(0, 0, 0, .25) 55%, rgba(0, 0, 0, .9) 100%); }
+}
+.needle { position: absolute; width: 22px; height: 1px; margin: -0.5px 0 0 -11px; background: #252926; border-radius: 1px; opacity: .2; transform: rotate(-18deg); transition: transform 1.1s var(--ease), opacity .9s var(--ease); will-change: transform; }
+@supports (transform: rotate(atan2(1, 1))) and (opacity: hypot(1, 1)) {
+  .needle {
+    --dx: calc((var(--px) - var(--x)) * var(--fw));
+    --dy: calc((var(--py) - var(--y)) * var(--fh));
+    --d: hypot(var(--dx), var(--dy));
+    transform: rotate(atan2(var(--dy), var(--dx))) scaleX(clamp(.55, calc(1.75 - var(--d) / 340), 1.75));
+    opacity: clamp(.12, calc(.8 - var(--d) / 950), .8);
+  }
+}
+
+/* Layout helpers */
+.split { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(440px, 100%), 1fr)); gap: 40px clamp(48px, 8vw, 120px); align-items: start; }
+.stack { display: flex; flex-direction: column; gap: 24px; }
+
+/* Network diagram (scroll: separate -> connected) */
+.net-stage { position: relative; width: 100%; aspect-ratio: 12 / 5; }
+@media (max-width: 640px) {
+  .net-stage { aspect-ratio: 3 / 4; }
+}
+.net-lines { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.net-lines path { fill: none; vector-effect: non-scaling-stroke; }
+.spoke { stroke: var(--sage); stroke-width: 1; stroke-opacity: .75; transform-box: view-box; transform-origin: 50px 48px; }
+.ring { stroke: var(--mist); stroke-width: 1; stroke-dasharray: 2 5; }
+.node { position: absolute; transform: translate(-50%, -50%); }
+.chip { display: inline-flex; align-items: center; gap: 10px; white-space: nowrap; background: #FFFFFF; border: 1px solid var(--mist); border-radius: 999px; padding: 11px 18px; font-size: 14px; font-weight: 500; color: #252926; box-shadow: 0 10px 30px -22px rgba(37, 41, 38, .35); }
+.chip::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--sage); flex: none; }
+.chip-core { background: var(--sage); color: #FFFFFF; border-color: var(--sage); padding: 14px 22px; font-weight: 600; }
+.chip-core::before { background: #FFFFFF; box-shadow: 0 0 0 4px rgba(255, 255, 255, .18); }
+@media (max-width: 640px) {
+  .chip { font-size: 12.5px; padding: 8px 12px; gap: 7px; }
+  .chip-core { padding: 10px 14px; }
+}
+.n1 { --ox: -90px; --oy: -46px; --or: -7deg; }
+.n2 { --ox: -40px; --oy: -70px; --or: 5deg; }
+.n3 { --ox: 70px; --oy: -60px; --or: -4deg; }
+.n4 { --ox: 110px; --oy: 10px; --or: 8deg; }
+.n5 { --ox: 60px; --oy: 70px; --or: -6deg; }
+.n6 { --ox: -80px; --oy: 60px; --or: 6deg; }
+
+/* Services */
+.svc { border-bottom: 1px solid var(--mist); }
+.svc-head { all: unset; box-sizing: border-box; width: 100%; cursor: pointer; display: grid; grid-template-columns: 64px minmax(0, 1fr) minmax(0, 1.3fr) 36px; gap: 10px 32px; align-items: baseline; padding: 30px 0; position: relative; color: #252926; font-family: inherit; }
+.svc-head::after { content: ''; position: absolute; left: 0; right: 0; bottom: -1px; height: 1px; background: var(--sage-deep); transform: scaleX(0); transform-origin: left; transition: transform .8s var(--ease); }
+.svc-head:hover::after, .svc[data-state="open"] .svc-head::after { transform: scaleX(1); }
+.svc-num { font-family: var(--mono); font-size: 13px; color: var(--faint); }
+.svc-title { font-size: clamp(22px, 2.2vw, 30px); font-weight: 500; letter-spacing: -0.028em; line-height: 1.2; }
+.svc-lead { font-family: var(--serif); font-style: italic; font-size: clamp(19px, 1.6vw, 23px); line-height: 1.35; color: var(--muted); transition: color .5s var(--ease); }
+.svc-head:hover .svc-lead, .svc[data-state="open"] .svc-lead { color: #252926; }
+.svc-icon { width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--mist); position: relative; align-self: center; transition: background-color .5s var(--ease), border-color .5s var(--ease), transform .7s var(--ease); }
+.svc-icon::before, .svc-icon::after { content: ''; position: absolute; left: 50%; top: 50%; width: 12px; height: 1.25px; background: #252926; transform: translate(-50%, -50%); transition: transform .6s var(--ease), background-color .4s var(--ease); }
+.svc-icon::after { transform: translate(-50%, -50%) rotate(90deg); }
+.svc-head:hover .svc-icon { border-color: var(--sage); }
+.svc[data-state="open"] .svc-icon { background: var(--sage); border-color: var(--sage); transform: rotate(180deg); }
+.svc[data-state="open"] .svc-icon::before, .svc[data-state="open"] .svc-icon::after { background: #FFFFFF; }
+.svc[data-state="open"] .svc-icon::after { transform: translate(-50%, -50%) rotate(0deg); }
+.svc-body { display: grid; grid-template-columns: 64px minmax(0, 1fr) minmax(0, 1.3fr) 36px; gap: 24px 32px; padding: 0 0 44px; align-items: start; }
+.svc-body > .svc-text { grid-column: 2; display: flex; flex-direction: column; gap: 20px; padding-top: 6px; }
+.svc-body > .demo { grid-column: 3 / 5; }
+@media (max-width: 900px) {
+  .svc-head { grid-template-columns: 36px minmax(0, 1fr) 36px; padding: 24px 0; }
+  .svc-lead { grid-column: 2; grid-row: 2; }
+  .svc-icon { grid-column: 3; grid-row: 1; }
+  .svc-body { grid-template-columns: minmax(0, 1fr); padding-bottom: 32px; }
+  .svc-body > .svc-text, .svc-body > .demo { grid-column: 1; }
+  .svc-body > .svc-text { padding-left: 68px; }
+}
+@media (max-width: 560px) {
+  .svc-body > .svc-text { padding-left: 0; }
+}
+
+/* Demo window */
+.demo { position: relative; margin: 0; background: #FAF9F6; border: 1px solid var(--mist); border-radius: 18px; overflow: hidden; min-height: 392px; display: flex; flex-direction: column; box-shadow: 0 1px 0 rgba(37, 41, 38, .03), 0 34px 70px -44px rgba(37, 41, 38, .28); }
+.demo::before { content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1px; background: radial-gradient(260px circle at var(--gx, -400px) var(--gy, -400px), var(--sage-deep), transparent 72%); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; opacity: 0; transition: opacity .6s var(--ease); z-index: 2; }
+.demo::after { content: ''; position: absolute; inset: 0; background: radial-gradient(420px circle at var(--gx, -400px) var(--gy, -400px), rgba(42, 69, 48, .06), transparent 70%); pointer-events: none; opacity: 0; transition: opacity .6s var(--ease); }
+.demo:hover::before, .demo:hover::after { opacity: 1; }
+.demo-bar { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 14px 18px; border-bottom: 1px solid var(--mist); font-family: var(--mono); font-size: 11.5px; color: var(--faint); background: #FFFFFF; position: relative; z-index: 1; }
+.live { display: inline-flex; align-items: center; gap: 8px; }
+.live::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--sage-deep); box-shadow: 0 0 0 3px rgba(42, 69, 48, .14); }
+.demo-in { position: relative; z-index: 1; flex: 1; display: flex; flex-direction: column; min-width: 0; }
+.mono { font-family: var(--mono); }
+
+/* demo 1 — system */
+.d-sys { display: grid; grid-template-columns: 150px minmax(0, 1fr); flex: 1; }
+.d-side { border-right: 1px solid var(--mist); padding: 16px 12px; display: flex; flex-direction: column; gap: 2px; background: #FFFFFF; }
+.d-nav { font-size: 12.5px; color: var(--faint); padding: 8px 10px; border-radius: 8px; display: flex; align-items: center; gap: 9px; }
+.d-nav::before { content: ''; width: 7px; height: 7px; border-radius: 2px; border: 1px solid #C5CEC7; flex: none; }
+.d-nav.on { background: #F1F3F0; color: #252926; font-weight: 600; }
+.d-nav.on::before { background: var(--sage); border-color: var(--sage-deep); }
+.d-main { padding: 18px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.d-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.d-title { font-size: 14px; font-weight: 600; letter-spacing: -0.01em; color: #252926; }
+.d-chip { font-family: var(--mono); font-size: 10.5px; color: var(--faint); border: 1px solid var(--mist); border-radius: 999px; padding: 4px 10px; background: #FFFFFF; white-space: nowrap; }
+.d-cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.d-col { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.d-col-h { font-family: var(--mono); font-size: 10.5px; color: var(--faint); text-transform: uppercase; letter-spacing: .08em; padding: 2px 2px 4px; }
+.d-card { background: #FFFFFF; border: 1px solid var(--mist); border-radius: 10px; padding: 10px; display: flex; flex-direction: column; gap: 9px; font-size: 12px; font-weight: 500; color: #252926; line-height: 1.3; box-shadow: 0 1px 2px rgba(37, 41, 38, .04); }
+.d-meta { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+.avs { display: flex; }
+.av { width: 16px; height: 16px; border-radius: 50%; background: var(--mist); border: 1.5px solid #FFFFFF; margin-left: -5px; }
+.av:first-child { margin-left: 0; }
+.av.s { background: var(--sage); }
+.prog { height: 3px; border-radius: 3px; background: #EDF0ED; overflow: hidden; }
+.prog > span { display: block; height: 100%; width: 100%; background: var(--sage-deep); transform-origin: left; transform: scaleX(.66); }
+.ok { width: 16px; height: 16px; border-radius: 50%; background: var(--sage); display: inline-grid; place-items: center; flex: none; }
+.d-card.hl { border-color: var(--sage); }
+@media (max-width: 640px) {
+  .d-sys { grid-template-columns: minmax(0, 1fr); }
+  .d-side { display: none; }
+  .d-cols { gap: 6px; }
+  .d-main { padding: 14px; }
+  .d-card { padding: 8px; font-size: 11px; }
+}
+
+/* demo 2 — dashboard */
+.d-dash { padding: 18px; display: flex; flex-direction: column; flex: 1; }
+.d-sources { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; justify-items: center; }
+.src { font-size: 11.5px; font-weight: 500; color: var(--muted); background: #FFFFFF; border: 1px solid var(--mist); border-radius: 999px; padding: 6px 12px; display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; }
+.src::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: #C5CEC7; }
+.d-flow { width: 100%; height: 40px; display: block; overflow: visible; }
+.d-flow path { fill: none; stroke: var(--sage-deep); stroke-width: 1.1; vector-effect: non-scaling-stroke; stroke-dasharray: 3 5; opacity: .7; }
+.d-board { background: #FFFFFF; border: 1px solid var(--mist); border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 16px; }
+.d-kpis { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.kpi { display: flex; flex-direction: column; gap: 10px; padding: 11px 12px; border-radius: 10px; background: #FAF9F6; min-width: 0; }
+.kpi-l { font-size: 11px; color: var(--faint); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.meter { height: 4px; border-radius: 4px; background: #E7EBE8; overflow: hidden; }
+.meter > span { display: block; height: 100%; background: var(--sage-deep); transform-origin: left; }
+.d-chart { width: 100%; height: 92px; display: block; }
+.d-chart .gl { stroke: #E9EDEA; stroke-width: 1; vector-effect: non-scaling-stroke; fill: none; }
+.d-chart .area { fill: var(--sage); opacity: .1; }
+.d-chart .line { fill: none; stroke: #252926; stroke-width: 1.5; vector-effect: non-scaling-stroke; stroke-linejoin: round; stroke-linecap: round; }
+
+/* demo 3 — conversation */
+.d-chat { padding: 20px 18px; display: flex; flex-direction: column; gap: 10px; flex: 1; justify-content: flex-end; }
+.msg { max-width: 84%; font-size: 13px; line-height: 1.5; padding: 10px 14px; border-radius: 14px; color: #252926; }
+.msg.me { align-self: flex-end; background: #E7ECE8; border-bottom-right-radius: 4px; }
+.msg.ai { align-self: flex-start; background: #FFFFFF; border: 1px solid var(--mist); border-bottom-left-radius: 4px; }
+.who { display: block; font-family: var(--mono); font-size: 10px; color: var(--sage-deep); letter-spacing: .08em; text-transform: uppercase; margin-bottom: 4px; }
+.d-event { align-self: center; font-family: var(--mono); font-size: 10.5px; color: var(--sage-deep); display: inline-flex; gap: 8px; align-items: center; padding: 6px 12px; border-radius: 999px; background: rgba(42, 69, 48, .08); margin-top: 4px; }
+.d-foot { border-top: 1px solid var(--mist); padding: 12px 18px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; background: #FFFFFF; }
+.tags { display: flex; flex-wrap: wrap; gap: 8px; }
+.tag { font-size: 11px; font-weight: 500; color: var(--muted); border: 1px solid var(--mist); border-radius: 999px; padding: 5px 11px; background: #FFFFFF; display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; }
+.tag::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--sage); }
+.typing { display: inline-flex; gap: 4px; align-items: center; }
+.typing span { width: 4px; height: 4px; border-radius: 50%; background: var(--faint); opacity: .5; }
+
+/* demo 4 — automation */
+.d-auto { padding: 22px 22px 20px 14px; flex: 1; }
+.a-list { position: relative; display: flex; flex-direction: column; gap: 12px; }
+.a-line { position: absolute; left: 16px; top: 24px; bottom: 24px; width: 1px; background: var(--mist); }
+.a-dot { position: absolute; left: -3px; top: 0; width: 7px; height: 7px; border-radius: 50%; background: var(--sage-deep); box-shadow: 0 0 0 4px rgba(42, 69, 48, .14); opacity: 0; }
+.a-step { display: grid; grid-template-columns: 33px minmax(0, 1fr); gap: 10px; align-items: center; }
+.a-node { width: 13px; height: 13px; border-radius: 50%; border: 1px solid var(--sage-deep); background: var(--sage); justify-self: center; position: relative; z-index: 1; }
+.a-card { background: #FFFFFF; border: 1px solid var(--mist); border-radius: 12px; padding: 12px 14px; display: flex; justify-content: space-between; align-items: center; gap: 12px; min-width: 0; }
+.a-t { font-size: 13px; font-weight: 600; color: #252926; display: block; }
+.a-s { font-family: var(--mono); font-size: 10.5px; color: var(--faint); display: block; margin-top: 3px; }
+.a-ok { font-family: var(--mono); font-size: 10.5px; color: var(--sage-deep); display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+
+/* demo 5 — web */
+.d-web { padding: 20px 18px; display: flex; gap: 14px; align-items: flex-end; flex: 1; }
+.browser { flex: 1; min-width: 0; background: #FFFFFF; border: 1px solid var(--mist); border-radius: 12px; overflow: hidden; }
+.b-bar { height: 32px; border-bottom: 1px solid var(--mist); display: flex; align-items: center; justify-content: center; background: #FAF9F6; }
+.b-url { font-family: var(--mono); font-size: 10px; color: var(--faint); background: #FFFFFF; border: 1px solid var(--mist); border-radius: 999px; padding: 3px 14px; }
+.b-page { padding: 16px; display: flex; flex-direction: column; gap: 14px; }
+.b-nav { display: flex; justify-content: space-between; align-items: center; }
+.b-logo { width: 48px; height: 8px; border-radius: 4px; background: #252926; }
+.b-links { display: flex; gap: 7px; }
+.b-links span { width: 22px; height: 5px; border-radius: 3px; background: var(--mist); }
+.b-hero { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 14px; align-items: center; }
+.b-copy { display: flex; flex-direction: column; gap: 7px; }
+.ln { height: 8px; border-radius: 4px; background: #252926; }
+.ln.soft { height: 5px; background: var(--mist); }
+.b-cta { width: 54px; height: 16px; border-radius: 999px; background: var(--sage); margin-top: 6px; }
+.b-img { aspect-ratio: 4 / 3; border-radius: 8px; background: #E4EAE5; position: relative; overflow: hidden; }
+.b-img::before { content: ''; position: absolute; width: 56%; aspect-ratio: 1; border-radius: 50%; border: 1px solid var(--sage-deep); left: 22%; top: 18%; }
+.b-img::after { content: ''; position: absolute; left: 0; right: 0; top: 62%; height: 1px; background: var(--sage-deep); opacity: .6; }
+.b-cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.b-card { height: 46px; border-radius: 8px; border: 1px solid var(--mist); background: #FAF9F6; }
+.phone { width: 96px; flex: none; background: #FFFFFF; border: 1px solid var(--mist); border-radius: 18px; padding: 14px 9px; display: flex; flex-direction: column; gap: 7px; }
+.phone .b-img { aspect-ratio: 1; }
+@media (max-width: 520px) {
+  .phone { display: none; }
+}
+
+/* Limits visual (scroll: structure is redrawn) */
+.limits { position: relative; margin: 0; aspect-ratio: 5 / 4; border-radius: 22px; border: 1px solid var(--mist); background-color: #FFFFFF; background-image: radial-gradient(#DEE4DF 1px, transparent 1.3px); background-size: 22px 22px; overflow: hidden; }
+.lim-dot { position: absolute; width: 9px; height: 9px; margin: -4.5px 0 0 -4.5px; border-radius: 50%; background: #252926; }
+.lim-dot.sg { background: var(--sage-deep); }
+.lim-links { position: absolute; inset: 0; width: 100%; height: 100%; }
+.lim-links path { fill: none; stroke: var(--sage); stroke-width: 1; stroke-opacity: .45; vector-effect: non-scaling-stroke; }
+.frame { position: absolute; border-radius: 12px; }
+.frame-old { inset: 26% 30%; border: 1px dashed #B9C3BC; opacity: .7; }
+.frame-new { inset: 9% 8%; border: 1px solid var(--sage); }
+.frame-label { position: absolute; left: 12px; top: -10px; font-family: var(--mono); font-size: 10.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--faint); background: #FFFFFF; padding: 2px 8px; white-space: nowrap; }
+.frame-new .frame-label { color: var(--sage); }
+
+/* Approach steps */
+.steps-wrap { position: relative; }
+.track { position: absolute; left: 0; right: 0; top: 6px; height: 1px; background: var(--mist); }
+.track-fill { position: absolute; inset: 0; background: var(--sage-deep); transform-origin: left; }
+.steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 40px; position: relative; }
+.step { position: relative; padding-top: 44px; }
+.step::before { content: ''; position: absolute; left: 0; top: 0; width: 13px; height: 13px; border-radius: 50%; background: var(--sage); border: 1px solid var(--sage-deep); }
+.step-n { font-family: var(--mono); font-size: 12px; color: var(--faint); letter-spacing: .04em; }
+.step h3 { font-size: 21px; font-weight: 600; letter-spacing: -0.022em; line-height: 1.25; margin: 14px 0 12px; color: #252926; }
+.step p { font-size: 16px; line-height: 1.65; color: var(--muted); margin: 0; text-wrap: pretty; }
+@media (max-width: 900px) {
+  .steps { grid-template-columns: minmax(0, 1fr); gap: 44px; }
+  .track { left: 6px; right: auto; top: 0; bottom: 0; width: 1px; height: auto; }
+  .track-fill { transform-origin: top; }
+  .step { padding-top: 0; padding-left: 44px; }
+  .step::before { top: 2px; }
+}
+
+/* Principle line */
+.tangle { width: 100%; height: auto; display: block; overflow: visible; }
+.tangle path { fill: none; stroke: #252926; stroke-width: 1.25; vector-effect: non-scaling-stroke; stroke-linecap: round; stroke-linejoin: round; }
+.tangle circle { fill: var(--sage); stroke: var(--sage-deep); stroke-width: 1; vector-effect: non-scaling-stroke; }
+
+/* ---------- Motion (only when the visitor allows it) ---------- */
+@keyframes rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+@keyframes pop { from { opacity: 0; transform: translateY(10px) scale(.985); } to { opacity: 1; transform: none; } }
+@keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes grow-x { from { transform: scaleX(0); } }
+@keyframes wipe { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes flow { to { stroke-dashoffset: -16; } }
+@keyframes breathe { 0%, 100% { box-shadow: 0 0 0 3px rgba(42, 69, 48, .16); } 50% { box-shadow: 0 0 0 6px rgba(42, 69, 48, .04); } }
+@keyframes prog { from { transform: scaleX(.42); } to { transform: scaleX(.9); } }
+@keyframes ring-pulse { 0%, 100% { border-color: var(--sage); box-shadow: 0 0 0 0 rgba(42, 69, 48, 0); } 50% { border-color: var(--sage-deep); box-shadow: 0 0 0 4px rgba(42, 69, 48, .12); } }
+@keyframes node-fill { from { background: #FAF9F6; border-color: #C5CEC7; } to { background: var(--sage); border-color: var(--sage-deep); } }
+@keyframes travel { 0% { top: 0%; opacity: 0; } 12% { opacity: 1; } 88% { opacity: 1; } 100% { top: 100%; opacity: 0; } }
+@keyframes typing { 0%, 100% { opacity: .3; transform: translateY(0); } 50% { opacity: .9; transform: translateY(-2px); } }
+
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+  .lm[data-motion="on"] .in { animation: rise 1.2s var(--ease) both; }
+  .lm[data-motion="on"] .d1 { animation-delay: .12s; }
+  .lm[data-motion="on"] .d2 { animation-delay: .26s; }
+  .lm[data-motion="on"] .d3 { animation-delay: .4s; }
+  .lm[data-motion="on"] .d4 { animation-delay: .54s; }
+  .lm[data-motion="on"] .needle { animation: fade 1.6s var(--ease) .3s backwards; }
+  .lm[data-motion="on"] .svc-body { animation: rise .9s var(--ease) both; }
+  .lm[data-motion="on"] .svc-body > .demo { animation: pop 1s var(--ease) .08s both; }
+  .lm[data-motion="on"] .pop { animation: pop .8s var(--ease) both; }
+  .lm[data-motion="on"] .p1 { animation-delay: .25s; }
+  .lm[data-motion="on"] .p2 { animation-delay: .4s; }
+  .lm[data-motion="on"] .p3 { animation-delay: .55s; }
+  .lm[data-motion="on"] .p4 { animation-delay: .7s; }
+  .lm[data-motion="on"] .p5 { animation-delay: .85s; }
+  .lm[data-motion="on"] .p6 { animation-delay: 1s; }
+  .lm[data-motion="on"] .live::before { animation: breathe 2.6s ease-in-out infinite; }
+  .lm[data-motion="on"] .prog > span { animation: prog 3.8s var(--ease) infinite alternate; }
+  .lm[data-motion="on"] .d-card.hl { animation: ring-pulse 3s ease-in-out infinite; }
+  .lm[data-motion="on"] .d-flow path { animation: flow 1.4s linear infinite; }
+  .lm[data-motion="on"] .meter > span { animation: grow-x 1.4s var(--ease) .5s both; }
+  .lm[data-motion="on"] .d-chart { animation: wipe 1.9s var(--ease) .45s both; }
+  .lm[data-motion="on"] .msg, .lm[data-motion="on"] .d-event { animation: pop .7s var(--ease) both; }
+  .lm[data-motion="on"] .m1 { animation-delay: .25s; }
+  .lm[data-motion="on"] .m2 { animation-delay: 1.05s; }
+  .lm[data-motion="on"] .m3 { animation-delay: 1.9s; }
+  .lm[data-motion="on"] .m4 { animation-delay: 2.7s; }
+  .lm[data-motion="on"] .m5 { animation-delay: 3.5s; }
+  .lm[data-motion="on"] .typing span { animation: typing 1.2s ease-in-out infinite; }
+  .lm[data-motion="on"] .typing span:nth-child(2) { animation-delay: .15s; }
+  .lm[data-motion="on"] .typing span:nth-child(3) { animation-delay: .3s; }
+  .lm[data-motion="on"] .a-node { animation: node-fill .6s var(--ease) both; }
+  .lm[data-motion="on"] .a-ok { animation: fade .6s var(--ease) both; }
+  .lm[data-motion="on"] .a1 .a-node, .lm[data-motion="on"] .a1 .a-ok { animation-delay: .35s; }
+  .lm[data-motion="on"] .a2 .a-node, .lm[data-motion="on"] .a2 .a-ok { animation-delay: 1.1s; }
+  .lm[data-motion="on"] .a3 .a-node, .lm[data-motion="on"] .a3 .a-ok { animation-delay: 1.85s; }
+  .lm[data-motion="on"] .a4 .a-node, .lm[data-motion="on"] .a4 .a-ok { animation-delay: 2.6s; }
+  .lm[data-motion="on"] .a-dot { animation: travel 3.4s var(--ease) .3s infinite; }
+}
+
+/* Scroll choreography — driven by the page's own scroll, no JS */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .lm-header { animation: hdr linear both; animation-timeline: scroll(); animation-range: 0px 140px; }
+    .lm[data-motion="on"] .reveal { animation: rise linear both; animation-timeline: view(); animation-range: entry 0% entry 80%; }
+    .lm[data-motion="on"] .net-stage { view-timeline: --net block; }
+    .lm[data-motion="on"] .node:not(.core) .chip { animation: node-in linear both; animation-timeline: --net; animation-range: entry 20% cover 50%; }
+    .lm[data-motion="on"] .core .chip { animation: core-in linear both; animation-timeline: --net; animation-range: entry 40% cover 46%; }
+    .lm[data-motion="on"] .spoke { animation: spoke linear both; animation-timeline: --net; animation-range: entry 70% cover 52%; }
+    .lm[data-motion="on"] .ring { animation: fade-ring linear both; animation-timeline: --net; animation-range: cover 40% cover 56%; }
+    .lm[data-motion="on"] .limits { view-timeline: --lim block; }
+    .lm[data-motion="on"] .frame-new { animation: frame-grow linear both; animation-timeline: --lim; animation-range: entry 50% cover 52%; }
+    .lm[data-motion="on"] .frame-old { animation: frame-fade linear both; animation-timeline: --lim; animation-range: entry 50% cover 52%; }
+    .lm[data-motion="on"] .lim-links { animation: links-in linear both; animation-timeline: --lim; animation-range: cover 40% cover 56%; }
+    .lm[data-motion="on"] .lim-dot.out { animation: dot-in linear both; animation-timeline: --lim; animation-range: cover 30% cover 50%; }
+    .lm[data-motion="on"] .steps-wrap { view-timeline: --steps block; }
+    .lm[data-motion="on"] .track-fill { animation: fill-x linear both; animation-timeline: --steps; animation-range: cover 22% cover 54%; }
+    .lm[data-motion="on"] .step::before { animation: node-fill linear both; animation-timeline: --steps; }
+    .lm[data-motion="on"] .s1::before { animation-range: cover 21% cover 23%; }
+    .lm[data-motion="on"] .s2::before { animation-range: cover 31% cover 33%; }
+    .lm[data-motion="on"] .s3::before { animation-range: cover 42% cover 44%; }
+    .lm[data-motion="on"] .s4::before { animation-range: cover 52% cover 54%; }
+    .lm[data-motion="on"] .tangle { animation: wipe linear both; animation-timeline: view(); animation-range: entry 10% cover 55%; }
+  }
+}
+@media (max-width: 900px) {
+  .lm[data-motion="on"] .track-fill { animation-name: fill-y; }
+}
+@keyframes hdr { to { border-bottom-color: #DEE4DF; } }
+@keyframes node-in { from { transform: translate(var(--ox), var(--oy)) rotate(var(--or)); opacity: .2; } to { transform: none; opacity: 1; } }
+@keyframes core-in { from { transform: scale(.82); opacity: .15; } to { transform: none; opacity: 1; } }
+@keyframes spoke { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+@keyframes fade-ring { from { opacity: 0; } to { opacity: 1; } }
+@keyframes frame-grow { 0% { inset: 26% 30%; opacity: 0; } 25% { opacity: 1; } 100% { inset: 9% 8%; opacity: 1; } }
+@keyframes frame-fade { 0% { opacity: 1; border-color: #6A716C; } 100% { opacity: .7; border-color: #B9C3BC; } }
+@keyframes links-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes dot-in { from { opacity: .25; transform: scale(.7); } to { opacity: 1; transform: none; } }
+@keyframes fill-x { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes fill-y { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .lm *, .lm *::before, .lm *::after { animation: none !important; transition: none !important; }
+}
+.lm[data-motion="off"] *, .lm[data-motion="off"] *::before, .lm[data-motion="off"] *::after { animation: none !important; transition: none !important; }
+</style>
+</helmet>
+
+<div class="lm" data-motion="{{ motionAttr }}" style="--sage: {{ accent }}; background: #FAF9F6; color: #252926; font-family: 'Manrope', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif; font-size: 16px; line-height: 1.5; min-height: 100%">
+
+  <a class="skip" href="#conteudo">Pular para o conteúdo</a>
+
+  <header class="lm-header">
+    <div class="wrap" style="display: flex; align-items: center; justify-content: space-between; gap: 24px; height: 72px">
+      <a class="wordmark" href="#topo" aria-label="Life Mama.lab — início"><span>Life Mama</span><span class="serif">.lab</span></a>
+      <nav class="nav" aria-label="Principal">
+        <a class="nav-link" href="#solucoes">Soluções</a>
+        <a class="nav-link" href="#abordagem">Abordagem</a>
+        <a class="pill-link" href="#contato">Contato</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="conteudo">
+
+    <!-- HERO -->
+    <section id="topo" class="hero" onMouseMove="{{ fieldMove }}" onMouseLeave="{{ fieldLeave }}">
+      <div class="field" aria-hidden="true">
+        <sc-for list="{{ heroField }}" as="n" hint-placeholder-count="104">
+          <span class="needle" style="{{ n.style }}"></span>
+        </sc-for>
+      </div>
+      <div class="wrap" style="position: relative; z-index: 1; padding-top: clamp(72px, 10vw, 136px); padding-bottom: clamp(88px, 11vw, 152px)">
+        <p class="eyebrow in">STRATEGIC TECHNOLOGY STUDIO</p>
+        <h1 class="in d1" style="margin: 30px 0 0; font-size: clamp(42px, 6.1vw, 88px); line-height: 1.02; letter-spacing: -0.046em; font-weight: 500; max-width: 11.6em; text-wrap: balance">O próximo estágio do seu negócio precisa de uma <em class="serif">operação à altura.</em></h1>
+        <div class="in d2" style="display: flex; flex-direction: column; gap: 18px; margin-top: 40px; max-width: 600px">
+          <p style="margin: 0; font-size: clamp(17px, 1.45vw, 20px); line-height: 1.6; color: #5B625D; text-wrap: pretty">Desenvolvemos sistemas personalizados, inteligência artificial e automações que transformam a complexidade operacional em uma experiência mais simples, integrada e inteligente.</p>
+          <p style="margin: 0; font-size: clamp(16px, 1.3vw, 18px); line-height: 1.55; font-weight: 600; letter-spacing: -0.01em; color: #252926">Tecnologia pensada a partir do seu negócio. Construída para acompanhar sua evolução.</p>
+        </div>
+        <div class="in d3" style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px 28px; margin-top: 44px">
+          <span class="magnet" onMouseMove="{{ magMove }}" onMouseLeave="{{ magLeave }}">
+            <a class="btn" href="#contato">Conversar sobre meu projeto<svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+          </span>
+          <a class="link-arrow" href="#solucoes">Conhecer nossas soluções<svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 3v10M4 9l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- VISÃO -->
+    <section id="visao" style="border-top: 1px solid #DEE4DF; padding: clamp(88px, 11vw, 152px) 0">
+      <div class="wrap">
+        <div class="split">
+          <h2 class="h2 reveal">Sua visão cresce. <em class="serif">A estrutura precisa acompanhar.</em></h2>
+          <div class="stack" style="padding-top: 8px">
+            <p class="lead reveal">Há um momento em que crescer exige mais do que boas ideias, uma equipe dedicada ou novas ferramentas.</p>
+            <p class="body reveal">É preciso que informações circulem com clareza. Que processos funcionem de maneira integrada. Que a liderança tenha visibilidade sobre o que acontece, sem precisar estar presente em cada decisão operacional.</p>
+          </div>
+        </div>
+
+        <figure style="margin: clamp(72px, 9vw, 120px) 0 0">
+          <figcaption class="sr">Diagrama: informações, processos, equipe, ferramentas, decisões e liderança, antes dispersos, passam a se conectar em uma operação integrada.</figcaption>
+          <div class="net-stage" aria-hidden="true">
+            <svg class="net-lines" viewBox="0 0 100 100" preserveAspectRatio="none">
+              <path class="ring" d="M18 26 L40 7 L70 14 L80 40 L68 86 L28 80 Z"></path>
+              <path class="spoke" d="M50 48 L18 26"></path>
+              <path class="spoke" d="M50 48 L40 7"></path>
+              <path class="spoke" d="M50 48 L70 14"></path>
+              <path class="spoke" d="M50 48 L80 40"></path>
+              <path class="spoke" d="M50 48 L68 86"></path>
+              <path class="spoke" d="M50 48 L28 80"></path>
+            </svg>
+            <div class="node n1" style="left: 18%; top: 26%"><span class="chip">Informações</span></div>
+            <div class="node n2" style="left: 40%; top: 7%"><span class="chip">Processos</span></div>
+            <div class="node n3" style="left: 70%; top: 14%"><span class="chip">Equipe</span></div>
+            <div class="node n4" style="left: 80%; top: 40%"><span class="chip">Ferramentas</span></div>
+            <div class="node n5" style="left: 68%; top: 86%"><span class="chip">Decisões</span></div>
+            <div class="node n6" style="left: 28%; top: 80%"><span class="chip">Liderança</span></div>
+            <div class="node core" style="left: 50%; top: 48%"><span class="chip chip-core">Operação integrada</span></div>
+          </div>
+        </figure>
+
+        <div class="split" style="margin-top: clamp(72px, 9vw, 128px); align-items: end">
+          <p class="serif reveal" style="margin: 0; font-size: clamp(42px, 5.2vw, 72px); line-height: 1; letter-spacing: -0.02em; color: #252926">É nesse ponto que entramos.</p>
+          <div class="stack">
+            <p class="body reveal">A Life Mama.lab transforma desafios de gestão em soluções tecnológicas personalizadas, criando a estrutura necessária para que empresas evoluam com consistência.</p>
+            <p class="reveal" style="margin: 0; font-size: clamp(24px, 2.3vw, 32px); line-height: 1.2; letter-spacing: -0.03em; font-weight: 500; color: #252926">Menos complexidade operacional.<br><span class="serif" style="font-size: 1.1em; color: var(--sage)">Mais capacidade de construir.</span></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SOLUÇÕES -->
+    <section id="solucoes" style="background: #FFFFFF; border-top: 1px solid #DEE4DF; border-bottom: 1px solid #DEE4DF; padding: clamp(88px, 11vw, 152px) 0">
+      <div class="wrap">
+        <div class="split" style="align-items: end">
+          <div class="stack" style="gap: 28px">
+            <p class="eyebrow">O QUE DESENVOLVEMOS</p>
+            <h2 class="h2 reveal">Tecnologia conectada à <em class="serif">realidade do seu negócio.</em></h2>
+          </div>
+          <p class="mono" style="margin: 0; font-size: 12px; letter-spacing: .06em; color: #6A716C; justify-self: end">Selecione uma solução para ver a demonstração</p>
+        </div>
+
+        <div style="margin-top: clamp(48px, 6vw, 80px); border-top: 1px solid #DEE4DF">
+
+          <!-- 01 -->
+          <div class="svc" data-state="{{ st1 }}">
+            <h3 style="margin: 0">
+              <button class="svc-head" type="button" id="svc-h1" aria-expanded="{{ ex1 }}" aria-controls="svc-p1" onClick="{{ pick1 }}">
+                <span class="svc-num">01</span>
+                <span class="svc-title">Sistemas sob medida</span>
+                <span class="svc-lead">Sua empresa tem processos próprios. Sua tecnologia também pode ter.</span>
+                <span class="svc-icon" aria-hidden="true"></span>
+              </button>
+            </h3>
+            <sc-if value="{{ is1 }}" hint-placeholder-val="{{ true }}">
+              <div class="svc-body" id="svc-p1" role="region" aria-labelledby="svc-h1">
+                <div class="svc-text">
+                  <p class="body">Desenvolvemos plataformas e sistemas administrativos que organizam fluxos, equipes, informações e operações em um ambiente pensado para a maneira como seu negócio funciona.</p>
+                </div>
+                <figure class="demo" onMouseMove="{{ glow }}">
+                  <figcaption class="sr">Demonstração: sistema administrativo com módulos e um quadro de projetos organizado por etapas.</figcaption>
+                  <div class="demo-bar" aria-hidden="true"><span>operações / projetos</span><span class="live">sincronizado</span></div>
+                  <div class="demo-in" aria-hidden="true">
+                    <div class="d-sys">
+                      <div class="d-side">
+                        <span class="d-nav">Visão geral</span>
+                        <span class="d-nav on">Fluxos</span>
+                        <span class="d-nav">Equipes</span>
+                        <span class="d-nav">Clientes</span>
+                        <span class="d-nav">Relatórios</span>
+                      </div>
+                      <div class="d-main">
+                        <div class="d-head"><span class="d-title">Fluxo de projetos</span><span class="d-chip">esta semana</span></div>
+                        <div class="d-cols">
+                          <div class="d-col">
+                            <span class="d-col-h">Entrada</span>
+                            <div class="d-card pop p1">Novo contrato<div class="d-meta"><span class="avs"><span class="av"></span><span class="av s"></span></span></div></div>
+                            <div class="d-card pop p2">Briefing do cliente<div class="d-meta"><span class="avs"><span class="av s"></span></span></div></div>
+                          </div>
+                          <div class="d-col">
+                            <span class="d-col-h">Em andamento</span>
+                            <div class="d-card hl pop p3">Revisão de proposta<div class="prog"><span></span></div></div>
+                            <div class="d-card pop p4">Onboarding da equipe<div class="prog"><span style="transform: scaleX(.4)"></span></div></div>
+                          </div>
+                          <div class="d-col">
+                            <span class="d-col-h">Concluído</span>
+                            <div class="d-card pop p5">Agenda integrada<div class="d-meta"><span class="avs"><span class="av"></span><span class="av"></span></span><span class="ok"><svg width="9" height="9" viewBox="0 0 10 10" fill="none"><path d="M2 5.2l2 2 4-4.4" stroke="#FFFFFF" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"></path></svg></span></div></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </figure>
+              </div>
+            </sc-if>
+          </div>
+
+          <!-- 02 -->
+          <div class="svc" data-state="{{ st2 }}">
+            <h3 style="margin: 0">
+              <button class="svc-head" type="button" id="svc-h2" aria-expanded="{{ ex2 }}" aria-controls="svc-p2" onClick="{{ pick2 }}">
+                <span class="svc-num">02</span>
+                <span class="svc-title">Painéis de gestão e inteligência</span>
+                <span class="svc-lead">O que precisa da sua atenção não deveria estar perdido entre planilhas, relatórios e diferentes plataformas.</span>
+                <span class="svc-icon" aria-hidden="true"></span>
+              </button>
+            </h3>
+            <sc-if value="{{ is2 }}" hint-placeholder-val="{{ false }}">
+              <div class="svc-body" id="svc-p2" role="region" aria-labelledby="svc-h2">
+                <div class="svc-text">
+                  <p class="body">Criamos painéis de acompanhamento que tornam informações relevantes acessíveis e facilitam decisões estratégicas.</p>
+                </div>
+                <figure class="demo" onMouseMove="{{ glow }}">
+                  <figcaption class="sr">Demonstração: planilhas, relatórios e plataformas convergem em um único painel de acompanhamento.</figcaption>
+                  <div class="demo-bar" aria-hidden="true"><span>painel / visão da operação</span><span class="live">atualizado agora</span></div>
+                  <div class="demo-in" aria-hidden="true">
+                    <div class="d-dash">
+                      <div class="d-sources">
+                        <span class="src pop p1">Planilhas</span>
+                        <span class="src pop p2">Relatórios</span>
+                        <span class="src pop p3">Plataformas</span>
+                      </div>
+                      <svg class="d-flow" viewBox="0 0 300 40" preserveAspectRatio="none">
+                        <path d="M50 2 C50 26, 150 14, 150 40"></path>
+                        <path d="M150 2 L150 40"></path>
+                        <path d="M250 2 C250 26, 150 14, 150 40"></path>
+                      </svg>
+                      <div class="d-board pop p2">
+                        <div class="d-head"><span class="d-title">Visão da operação</span><span class="d-chip">últimas semanas</span></div>
+                        <div class="d-kpis">
+                          <div class="kpi"><span class="kpi-l">Atendimentos</span><span class="meter"><span style="width: 74%"></span></span></div>
+                          <div class="kpi"><span class="kpi-l">Projetos ativos</span><span class="meter"><span style="width: 52%"></span></span></div>
+                          <div class="kpi"><span class="kpi-l">Prazos em dia</span><span class="meter"><span style="width: 88%"></span></span></div>
+                        </div>
+                        <svg class="d-chart" viewBox="0 0 300 90" preserveAspectRatio="none">
+                          <path class="gl" d="M0 22 H300 M0 52 H300 M0 82 H300"></path>
+                          <path class="area" d="M0 70 L30 63 L60 66 L90 52 L120 55 L150 42 L180 46 L210 33 L240 36 L270 22 L300 18 L300 90 L0 90 Z"></path>
+                          <path class="line" d="M0 70 L30 63 L60 66 L90 52 L120 55 L150 42 L180 46 L210 33 L240 36 L270 22 L300 18"></path>
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                </figure>
+              </div>
+            </sc-if>
+          </div>
+
+          <!-- 03 -->
+          <div class="svc" data-state="{{ st3 }}">
+            <h3 style="margin: 0">
+              <button class="svc-head" type="button" id="svc-h3" aria-expanded="{{ ex3 }}" aria-controls="svc-p3" onClick="{{ pick3 }}">
+                <span class="svc-num">03</span>
+                <span class="svc-title">Atendimento com IA conversacional</span>
+                <span class="svc-lead">Uma conversa natural. Uma experiência mais inteligente.</span>
+                <span class="svc-icon" aria-hidden="true"></span>
+              </button>
+            </h3>
+            <sc-if value="{{ is3 }}" hint-placeholder-val="{{ false }}">
+              <div class="svc-body" id="svc-p3" role="region" aria-labelledby="svc-h3">
+                <div class="svc-text">
+                  <p class="body">Desenvolvemos soluções de atendimento com inteligência artificial capazes de interpretar solicitações, oferecer respostas contextualizadas e dar continuidade a processos, com integração às ferramentas do negócio e encaminhamento humano quando necessário.</p>
+                </div>
+                <figure class="demo" onMouseMove="{{ glow }}">
+                  <figcaption class="sr">Demonstração: assistente com inteligência artificial remarca um horário, atualiza a agenda e mantém a opção de encaminhar para a equipe.</figcaption>
+                  <div class="demo-bar" aria-hidden="true"><span>atendimento / conversa</span><span class="live">assistente ativo</span></div>
+                  <div class="demo-in" aria-hidden="true">
+                    <div class="d-chat">
+                      <div class="msg me m1">Oi! Preciso remarcar meu horário de quinta.</div>
+                      <div class="msg ai m2"><span class="who">Assistente</span>Claro. Tenho dois horários disponíveis na sexta: 10h ou 15h30. Qual prefere?</div>
+                      <div class="msg me m3">15h30, por favor.</div>
+                      <div class="msg ai m4"><span class="who">Assistente</span>Pronto, seu horário foi remarcado para sexta, às 15h30. Enviei a confirmação por e-mail.</div>
+                      <span class="d-event m5"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5.2l2 2 4-4.4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>agenda atualizada</span>
+                    </div>
+                    <div class="d-foot">
+                      <span class="tags"><span class="tag">Integrado à agenda</span><span class="tag">Encaminhar para a equipe</span></span>
+                      <span class="typing"><span></span><span></span><span></span></span>
+                    </div>
+                  </div>
+                </figure>
+              </div>
+            </sc-if>
+          </div>
+
+          <!-- 04 -->
+          <div class="svc" data-state="{{ st4 }}">
+            <h3 style="margin: 0">
+              <button class="svc-head" type="button" id="svc-h4" aria-expanded="{{ ex4 }}" aria-controls="svc-p4" onClick="{{ pick4 }}">
+                <span class="svc-num">04</span>
+                <span class="svc-title">Automação de processos e integrações</span>
+                <span class="svc-lead">Sua equipe não precisa repetir manualmente o que a tecnologia pode executar com segurança.</span>
+                <span class="svc-icon" aria-hidden="true"></span>
+              </button>
+            </h3>
+            <sc-if value="{{ is4 }}" hint-placeholder-val="{{ false }}">
+              <div class="svc-body" id="svc-p4" role="region" aria-labelledby="svc-h4">
+                <div class="svc-text">
+                  <p class="body">Conectamos sistemas e automatizamos fluxos administrativos para reduzir retrabalho, organizar etapas e ampliar a eficiência operacional.</p>
+                </div>
+                <figure class="demo" onMouseMove="{{ glow }}">
+                  <figcaption class="sr">Demonstração: um fluxo automatizado recebe um formulário, valida os dados, cadastra no sistema e notifica a equipe.</figcaption>
+                  <div class="demo-bar" aria-hidden="true"><span>automação / novo pedido</span><span class="live">em execução</span></div>
+                  <div class="demo-in" aria-hidden="true">
+                    <div class="d-auto">
+                      <div class="a-list">
+                        <div class="a-line"><span class="a-dot"></span></div>
+                        <div class="a-step a1 pop p1"><span class="a-node"></span><div class="a-card"><div><span class="a-t">Formulário recebido</span><span class="a-s">gatilho</span></div><span class="a-ok">concluído</span></div></div>
+                        <div class="a-step a2 pop p2"><span class="a-node"></span><div class="a-card"><div><span class="a-t">Dados validados</span><span class="a-s">regra</span></div><span class="a-ok">concluído</span></div></div>
+                        <div class="a-step a3 pop p3"><span class="a-node"></span><div class="a-card"><div><span class="a-t">Cadastro no sistema</span><span class="a-s">integração</span></div><span class="a-ok">concluído</span></div></div>
+                        <div class="a-step a4 pop p4"><span class="a-node"></span><div class="a-card"><div><span class="a-t">Equipe notificada</span><span class="a-s">mensagem</span></div><span class="a-ok">concluído</span></div></div>
+                      </div>
+                    </div>
+                    <div class="d-foot"><span class="mono" style="font-size: 10.5px; color: #6A716C">sem etapas manuais</span><span class="tags"><span class="tag">CRM</span><span class="tag">E-mail</span><span class="tag">Planilhas</span></span></div>
+                  </div>
+                </figure>
+              </div>
+            </sc-if>
+          </div>
+
+          <!-- 05 -->
+          <div class="svc" data-state="{{ st5 }}">
+            <h3 style="margin: 0">
+              <button class="svc-head" type="button" id="svc-h5" aria-expanded="{{ ex5 }}" aria-controls="svc-p5" onClick="{{ pick5 }}">
+                <span class="svc-num">05</span>
+                <span class="svc-title">Sites e experiências digitais</span>
+                <span class="svc-lead">Sua presença digital deve expressar o valor da sua empresa e participar da sua estratégia.</span>
+                <span class="svc-icon" aria-hidden="true"></span>
+              </button>
+            </h3>
+            <sc-if value="{{ is5 }}" hint-placeholder-val="{{ false }}">
+              <div class="svc-body" id="svc-p5" role="region" aria-labelledby="svc-h5">
+                <div class="svc-text">
+                  <p class="body">Desenvolvemos websites, portais e experiências digitais com atenção ao design, à usabilidade e à integração com seus processos.</p>
+                </div>
+                <figure class="demo" onMouseMove="{{ glow }}">
+                  <figcaption class="sr">Demonstração: um site se organiza em versões para computador e celular.</figcaption>
+                  <div class="demo-bar" aria-hidden="true"><span>experiência / site</span><span class="live">publicado</span></div>
+                  <div class="demo-in" aria-hidden="true">
+                    <div class="d-web">
+                      <div class="browser pop p1">
+                        <div class="b-bar"><span class="b-url">seunegocio.com.br</span></div>
+                        <div class="b-page">
+                          <div class="b-nav pop p2"><span class="b-logo"></span><span class="b-links"><span></span><span></span><span></span></span></div>
+                          <div class="b-hero">
+                            <div class="b-copy pop p3"><span class="ln" style="width: 92%"></span><span class="ln" style="width: 64%"></span><span class="ln soft" style="width: 84%; margin-top: 6px"></span><span class="ln soft" style="width: 70%"></span><span class="b-cta"></span></div>
+                            <div class="b-img pop p4"></div>
+                          </div>
+                          <div class="b-cards pop p5"><span class="b-card"></span><span class="b-card"></span><span class="b-card"></span></div>
+                        </div>
+                      </div>
+                      <div class="phone pop p6">
+                        <span class="b-logo" style="width: 32px; height: 6px"></span>
+                        <span class="ln" style="width: 90%; height: 6px; margin-top: 6px"></span>
+                        <span class="ln" style="width: 62%; height: 6px"></span>
+                        <span class="b-img"></span>
+                        <span class="ln soft" style="width: 86%"></span>
+                        <span class="ln soft" style="width: 70%"></span>
+                        <span class="b-cta" style="width: 44px; height: 12px"></span>
+                      </div>
+                    </div>
+                  </div>
+                </figure>
+              </div>
+            </sc-if>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- PARA EMPRESAS -->
+    <section id="empresas" style="padding: clamp(88px, 11vw, 152px) 0">
+      <div class="wrap">
+        <div class="stack" style="gap: 28px; max-width: 980px">
+          <p class="eyebrow">PARA EMPRESAS QUE CHEGARAM A UM NOVO MOMENTO</p>
+          <h2 class="h2 reveal">O crescimento revela os limites da estrutura. <em class="serif">A tecnologia pode redesenhar esses limites.</em></h2>
+        </div>
+
+        <div class="split" style="margin-top: clamp(56px, 7vw, 96px); align-items: center">
+          <figure class="limits">
+            <figcaption class="sr">Ilustração: elementos que ultrapassam uma estrutura antiga passam a caber em uma estrutura redesenhada e conectada.</figcaption>
+            <svg class="lim-links" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+              <path d="M16 40 L30 34 L42 28 L55 36 L66 30 L76 44 L82 66 L70 78 L46 72 L28 82 L24 64 Z"></path>
+              <path d="M36 52 L50 48 L62 56 L76 44 M50 48 L55 36 M36 52 L24 64 M46 72 L50 48"></path>
+            </svg>
+            <div class="frame frame-old" aria-hidden="true"><span class="frame-label">estrutura atual</span></div>
+            <div class="frame frame-new" aria-hidden="true"><span class="frame-label">estrutura redesenhada</span></div>
+            <span class="lim-dot" style="left: 30%; top: 34%" aria-hidden="true"></span>
+            <span class="lim-dot sg" style="left: 42%; top: 28%" aria-hidden="true"></span>
+            <span class="lim-dot" style="left: 55%; top: 36%" aria-hidden="true"></span>
+            <span class="lim-dot" style="left: 66%; top: 30%" aria-hidden="true"></span>
+            <span class="lim-dot sg" style="left: 36%; top: 52%" aria-hidden="true"></span>
+            <span class="lim-dot" style="left: 50%; top: 48%" aria-hidden="true"></span>
+            <span class="lim-dot" style="left: 62%; top: 56%" aria-hidden="true"></span>
+            <span class="lim-dot" style="left: 46%; top: 72%" aria-hidden="true"></span>
+            <span class="lim-dot out" style="left: 16%; top: 40%" aria-hidden="true"></span>
+            <span class="lim-dot out sg" style="left: 24%; top: 64%" aria-hidden="true"></span>
+            <span class="lim-dot out" style="left: 76%; top: 44%" aria-hidden="true"></span>
+            <span class="lim-dot out sg" style="left: 82%; top: 66%" aria-hidden="true"></span>
+            <span class="lim-dot out" style="left: 70%; top: 78%" aria-hidden="true"></span>
+            <span class="lim-dot out" style="left: 28%; top: 82%" aria-hidden="true"></span>
+          </figure>
+          <div class="stack" style="gap: 28px">
+            <p class="lead reveal">Trabalhamos com empresas que precisam conectar sua visão estratégica à operação cotidiana.</p>
+            <p class="body reveal">Negócios com equipes em expansão, jornadas de clientes complexas, informações descentralizadas e processos que já não podem depender de controles manuais.</p>
+            <p class="body reveal">De clínicas e serviços especializados a consultorias e empresas criativas: cada projeto começa pela compreensão do que torna aquele negócio único.</p>
+          </div>
+        </div>
+
+        <blockquote class="reveal" style="margin: clamp(80px, 10vw, 136px) 0 0; display: flex; flex-direction: column; gap: 28px; max-width: 980px">
+          <span aria-hidden="true" style="display: block; width: 44px; height: 1px; background: var(--sage)"></span>
+          <p class="serif" style="margin: 0; font-size: clamp(30px, 3.6vw, 50px); line-height: 1.14; color: #252926; text-wrap: balance">Porque desenvolver uma boa solução exige compreender primeiro o problema que ela precisa resolver.</p>
+        </blockquote>
+      </div>
+    </section>
+
+    <!-- ABORDAGEM -->
+    <section id="abordagem" style="background: #FFFFFF; border-top: 1px solid #DEE4DF; border-bottom: 1px solid #DEE4DF; padding: clamp(88px, 11vw, 152px) 0">
+      <div class="wrap">
+        <div class="stack" style="gap: 28px">
+          <p class="eyebrow">NOSSA ABORDAGEM</p>
+          <h2 class="h2 reveal">Antes de desenvolver, <em class="serif">compreendemos.</em></h2>
+        </div>
+        <div class="steps-wrap" style="margin-top: clamp(64px, 8vw, 104px)">
+          <div class="track" aria-hidden="true"><span class="track-fill"></span></div>
+          <ol class="steps">
+            <li class="step s1">
+              <span class="step-n">01.</span>
+              <h3>Imersão e diagnóstico</h3>
+              <p>Conhecemos seu modelo de negócio, sua operação, seus processos e os desafios que limitam sua evolução.</p>
+            </li>
+            <li class="step s2">
+              <span class="step-n">02.</span>
+              <h3>Arquitetura da solução</h3>
+              <p>Desenhamos uma proposta tecnológica com prioridades claras, experiência do usuário e integrações necessárias.</p>
+            </li>
+            <li class="step s3">
+              <span class="step-n">03.</span>
+              <h3>Desenvolvimento e implementação</h3>
+              <p>Construímos, testamos e implementamos a solução junto à sua equipe, respeitando o escopo e as particularidades do projeto.</p>
+            </li>
+            <li class="step s4">
+              <span class="step-n">04.</span>
+              <h3>Evolução contínua</h3>
+              <p>Acompanhamos o funcionamento da tecnologia e trabalhamos em melhorias, suporte e novas possibilidades de evolução.</p>
+            </li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRINCÍPIO -->
+    <section id="principio" style="padding: clamp(88px, 11vw, 152px) 0">
+      <div class="wrap">
+        <svg class="tangle" viewBox="0 0 1200 200" aria-hidden="true">
+          <path d="M8 112 C 70 112, 104 44, 150 70 C 196 98, 132 166, 96 124 C 62 84, 186 18, 232 88 C 262 134, 206 172, 192 132 C 178 92, 296 34, 330 98 C 350 138, 300 150, 308 112 C 318 72, 418 66, 452 98 C 484 128, 540 110, 600 102 C 680 96, 760 100, 860 100 L 1176 100"></path>
+          <circle cx="1180" cy="100" r="5"></circle>
+        </svg>
+        <div style="display: flex; flex-direction: column; align-items: center; text-align: center; margin-top: clamp(48px, 6vw, 80px)">
+          <h2 class="h2 reveal" style="max-width: 15em">Tecnologia que preserva o que torna <em class="serif">seu negócio único.</em></h2>
+          <div class="stack" style="gap: 24px; margin-top: 44px; max-width: 660px; align-items: center">
+            <p class="lead reveal">Acreditamos que boas soluções não começam no código, mas na compreensão das pessoas, dos processos e das decisões que sustentam uma empresa.</p>
+            <p class="body reveal">A tecnologia deve ampliar capacidades, simplificar o que é complexo e criar espaço para aquilo que exige visão, criatividade e inteligência humana.</p>
+            <p class="serif reveal" style="margin: 12px 0 0; font-size: clamp(26px, 2.4vw, 32px); line-height: 1.2; color: #252926">Esse é o princípio que orienta o nosso trabalho.</p>
+          </div>
+          <div class="reveal" style="display: flex; flex-direction: column; align-items: center; gap: 12px; margin-top: 64px">
+            <span aria-hidden="true" style="display: block; width: 1px; height: 48px; background: var(--sage)"></span>
+            <p style="margin: 0; font-size: 16px; font-weight: 600; letter-spacing: -0.012em; color: #252926">Life Mama.lab — Inteligência aplicada a negócios em evolução.</p>
+            <p class="mono" style="margin: 0; font-size: 12px; letter-spacing: .06em; color: #5B625D">Uma empresa do grupo Life Mama.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTATO -->
+    <section id="contato" style="padding: 0 0 clamp(88px, 10vw, 136px)">
+      <div class="wrap">
+        <div class="cta" onMouseMove="{{ fieldMove }}" onMouseLeave="{{ fieldLeave }}" style="position: relative; overflow: hidden; background: #FFFFFF; border: 1px solid #DEE4DF; border-radius: 28px; padding: clamp(64px, 8vw, 112px) clamp(22px, 6vw, 96px)">
+          <div class="field" aria-hidden="true">
+            <sc-for list="{{ ctaField }}" as="n" hint-placeholder-count="102">
+              <span class="needle" style="{{ n.style }}"></span>
+            </sc-for>
+          </div>
+          <div style="position: relative; z-index: 1; max-width: 780px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; text-align: center">
+            <h2 class="h2 reveal">Vamos construir a <em class="serif">próxima estrutura</em> do seu negócio?</h2>
+            <div class="stack" style="gap: 16px; margin-top: 32px; max-width: 600px">
+              <p class="lead">Conte-nos sobre o momento da sua empresa e os desafios que deseja transformar.</p>
+              <p class="body">A partir dessa conversa, vamos entender suas necessidades e avaliar os caminhos tecnológicos mais adequados.</p>
+            </div>
+            <div style="margin-top: 44px">
+              <span class="magnet" onMouseMove="{{ magMove }}" onMouseLeave="{{ magLeave }}">
+                <a class="btn" href="#contato" style="min-height: 60px; padding: 0 32px; font-size: 16px">Apresentar meu projeto<svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+              </span>
+            </div>
+            <p style="margin: 28px 0 0; font-size: 14px; line-height: 1.6; color: #5B625D; max-width: 440px">Projetos personalizados. Diagnóstico inicial e escopo definidos conforme a complexidade de cada operação.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer style="border-top: 1px solid #DEE4DF">
+    <div class="wrap" style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 20px 40px; padding-top: 36px; padding-bottom: 44px">
+      <div style="display: flex; flex-direction: column; gap: 4px">
+        <a class="wordmark" href="#topo"><span>Life Mama</span><span class="serif">.lab</span></a>
+        <p class="mono" style="margin: 0; font-size: 12px; letter-spacing: .04em; color: #5B625D">Uma empresa do grupo Life Mama.</p>
+      </div>
+      <nav class="nav" aria-label="Rodapé" style="flex-wrap: wrap">
+        <a class="nav-link" href="#solucoes" style="display: inline-block">Soluções</a>
+        <a class="nav-link" href="#abordagem" style="display: inline-block">Abordagem</a>
+        <a class="nav-link" href="#contato" style="display: inline-block">Contato</a>
+      </nav>
+      <p class="mono" style="margin: 0; font-size: 12px; color: #5B625D">© 2026 Life Mama.lab</p>
+    </div>
+  </footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#2A4530","options":["#2A4530","#2F4A3A","#1F3D2E","#27421B"],"section":"Marca"},"motion":{"editor":"boolean","default":true,"section":"Experiência"},"$preview":{"width":1440,"height":8300}}'>
+class Component extends DCLogic {
+  makeField(cols, rows, x0, x1, y0, y1) {
+    const out = [];
+    for (let j = 0; j < rows; j++) {
+      for (let i = 0; i < cols; i++) {
+        const x = x0 + (x1 - x0) * (cols === 1 ? 0.5 : i / (cols - 1));
+        const y = y0 + (y1 - y0) * (rows === 1 ? 0.5 : j / (rows - 1));
+        out.push({ style: 'left: ' + x.toFixed(2) + '%; top: ' + y.toFixed(2) + '%; --x: ' + x.toFixed(2) + '; --y: ' + y.toFixed(2) });
+      }
+    }
+    return out;
+  }
+
+  calm() {
+    if (this.props.motion === false) return true;
+    try {
+      return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+    } catch (err) {
+      return false;
+    }
+  }
+
+  handlers() {
+    if (this._h) return this._h;
+    const self = this;
+    this._h = {
+      fieldMove(e) {
+        if (self.calm()) return;
+        const el = e.currentTarget;
+        if (!el) return;
+        const r = el.getBoundingClientRect();
+        const x = ((e.clientX - r.left) / r.width) * 100;
+        const y = ((e.clientY - r.top) / r.height) * 100;
+        if (el._raf) cancelAnimationFrame(el._raf);
+        el._raf = requestAnimationFrame(function () {
+          el.style.setProperty('--px', x.toFixed(2));
+          el.style.setProperty('--py', y.toFixed(2));
+          el.style.setProperty('--fw', (r.width / 100).toFixed(3));
+          el.style.setProperty('--fh', (r.height / 100).toFixed(3));
+        });
+      },
+      fieldLeave(e) {
+        const el = e.currentTarget;
+        if (!el) return;
+        if (el._raf) cancelAnimationFrame(el._raf);
+        el.style.removeProperty('--px');
+        el.style.removeProperty('--py');
+      },
+      glow(e) {
+        if (self.calm()) return;
+        const el = e.currentTarget;
+        if (!el) return;
+        const r = el.getBoundingClientRect();
+        el.style.setProperty('--gx', Math.round(e.clientX - r.left) + 'px');
+        el.style.setProperty('--gy', Math.round(e.clientY - r.top) + 'px');
+      },
+      magMove(e) {
+        if (self.calm()) return;
+        const el = e.currentTarget;
+        if (!el) return;
+        const r = el.getBoundingClientRect();
+        const dx = (e.clientX - (r.left + r.width / 2)) / (r.width / 2);
+        const dy = (e.clientY - (r.top + r.height / 2)) / (r.height / 2);
+        el.style.setProperty('--mx', (dx * 7).toFixed(1) + 'px');
+        el.style.setProperty('--my', (dy * 5).toFixed(1) + 'px');
+      },
+      magLeave(e) {
+        const el = e.currentTarget;
+        if (!el) return;
+        el.style.removeProperty('--mx');
+        el.style.removeProperty('--my');
+      }
+    };
+    return this._h;
+  }
+
+  renderVals() {
+    if (!this._hero) this._hero = this.makeField(13, 8, 3, 97, 7, 93);
+    if (!this._cta) this._cta = this.makeField(17, 6, 2.5, 97.5, 8, 92);
+    const st = this.state || {};
+    const active = typeof st.svc === 'number' ? st.svc : 0;
+    const h = this.handlers();
+    const vals = {
+      accent: this.props.accent ?? '#2A4530',
+      motionAttr: this.props.motion === false ? 'off' : 'on',
+      heroField: this._hero,
+      ctaField: this._cta,
+      fieldMove: h.fieldMove,
+      fieldLeave: h.fieldLeave,
+      glow: h.glow,
+      magMove: h.magMove,
+      magLeave: h.magLeave
+    };
+    for (let i = 0; i < 5; i++) {
+      const n = i + 1;
+      const on = active === i;
+      vals['is' + n] = on;
+      vals['ex' + n] = on ? 'true' : 'false';
+      vals['st' + n] = on ? 'open' : 'closed';
+      vals['pick' + n] = () => this.setState({ svc: i });
+    }
+    return vals;
+  }
+}
+</script>
+</body>
+</html>
